@@ -10,8 +10,7 @@ app.secret_key = 'super dupper secret_mega_key'
 
 @app.route("/")
 def ask_credentials():
-    url = url_for('change_credential')
-    return render_template("credentials.html", change_url=url)
+    return render_template("credentials.html")
 
 
 @app.route("/", methods=["POST"])
@@ -25,7 +24,8 @@ def change_credential():
         flash('Your password have been changed.')
         return redirect(url_for('ask_credentials'))
 
-    return "Error changing yor password"
+    flash('Password mismatch. Check previous password')
+    return render_template("credentials.html")
 
 def _check_current_password(username, password):
     ht = HtpasswdFile("devel_users.passwd")
