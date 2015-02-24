@@ -20,17 +20,17 @@ def change_credential():
     newpassword = request.form['newpassword']
 
     if newpassword == "":
-        flash("The password can not be empty")
+        flash("The new password can not be empty", 'warning')
         return render_template('credentials.html')
 
     if g.ht.check_password(username, oldpassword):
         g.ht.set_password(username, newpassword)
         g.ht.save()
 
-        flash('Your password have been changed.')
+        flash('Your password have been changed.', 'success')
         return redirect(url_for('ask_credentials'))
 
-    flash('Password mismatch. Check previous password')
+    flash('Password mismatch. Check previous password', 'danger')
     return render_template("credentials.html")
 
 @app.before_request
