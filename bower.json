@@ -1,0 +1,21 @@
+{
+  "name": "admin3f",
+  "version": "0.0.1",
+  "authors": [
+    "= <fernando@soluciones3f.com.ar>"
+  ],
+  "description": "Interface to administrate htpasswd files",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2"
+  }
+}

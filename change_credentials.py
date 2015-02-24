@@ -19,6 +19,10 @@ def change_credential():
     oldpassword = request.form['oldpassword']
     newpassword = request.form['newpassword']
 
+    if newpassword == "":
+        flash("The password can not be empty")
+        return render_template('credentials.html')
+
     if g.ht.check_password(username, oldpassword):
         g.ht.set_password(username, newpassword)
         g.ht.save()
