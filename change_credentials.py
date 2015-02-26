@@ -1,10 +1,6 @@
 from flask import Flask, render_template, url_for, request, flash, redirect, g
 from passlib.apache import HtpasswdFile
 
-from string import ascii_letters, digits
-from random import choice
-from crypt import crypt
-
 app = Flask(__name__)
 app.secret_key = 'super dupper secret_mega_key'
 
