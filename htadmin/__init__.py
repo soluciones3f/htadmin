@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, flash, redirect, g
+from flask import Flask, render_template, url_for, request, flash, redirect, g, make_response, json
 from passlib.apache import HtpasswdFile
 
 app = Flask(__name__)
@@ -28,6 +28,13 @@ def change_credential():
 
     flash('Password mismatch. Check previous password', 'danger')
     return render_template("credentials.html")
+
+@app.route("/api/users", methods=["GET"])
+def api_users_list():
+    users = g.ht.users()
+    response = make_response(json.dumps(users))
+    response.headers['mimetype'] = 'application/json'
+    return response
 
 @app.before_request
 def before_request():
