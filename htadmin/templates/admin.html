@@ -18,7 +18,7 @@
 			<tbody data-bind="visible: users().length > 0, foreach: users">
 				<tr><td data-bind="text: $data"><!-- Username --></td></tr>
 			</tbody>
-			<tbody data-bind="visible: users().length  0, foreach: users">
+			<tbody data-bind="visible: users().length == 0, foreach: users">
 				<tr><td>No users yet!</td></tr>
 			</tbody>
 		</table>

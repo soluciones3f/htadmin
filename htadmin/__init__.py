@@ -34,7 +34,7 @@ def change_credential():
 @app.route("/api/users", methods=["GET"])
 @requires_auth
 def api_users_list():
-    users = g.ht.users()
+    users = [i for i in g.ht.users() if not i[0] == "#"]
     users.sort()
     return Response( json.dumps(users), mimetype="application/json" )
 
