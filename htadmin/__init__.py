@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for, request, flash, redirect, g, make_response, json
+from flask import Flask, render_template, url_for, request, flash, redirect, g, make_response, json, jsonify
 from passlib.apache import HtpasswdFile
+import xkcd_password
 
 app = Flask(__name__)
 app.secret_key = 'super dupper secret_mega_key'
@@ -36,9 +37,26 @@ def api_users_list():
     response.headers['mimetype'] = 'application/json'
     return response
 
+@app.route("/api/users/<username>", methods=["POST"])
+def api_user_post(username):
+    """Add user with random password only if user does not exists."""
+    exists = g.ht.get_hash(username) == None
+    if exists:
+        password = _generate_password()
+        g.ht.set_password(username, password)
+        g.ht.save()
+        return jsonify({'username': username, 'password': password})
+
+    return jsonify({'error': 'username already exists'}), 409
+
 @app.before_request
 def before_request():
     g.ht = HtpasswdFile("devel_users.passwd")
+
+def _generate_password():
+    wordfile = xkcd_password.locate_wordfile()
+    mywords = xkcd_password.generate_wordlist(wordfile=wordfile, min_length=4, max_length=8)
+    return xkcd_password.generate_xkcdpassword(mywords, delim='-', n_words=3)
 
 if __name__ == "__main__":
     app.debug = True
