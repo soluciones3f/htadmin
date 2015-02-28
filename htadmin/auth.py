@@ -1,11 +1,11 @@
 from functools import wraps
-from flask import request, Response, g
-
+from flask import request, Response, g  
 
 def check_auth(username, password):
-    """This function is called to check if a username /
-    password combination is valid.
-    """
+    """This function is called to check if a username / password combination is valid."""
+    if not username in {"fernando", "francisco", "facundo"}:
+        return False
+
     return g.ht.check_password(username, password)
 
 def authenticate():
