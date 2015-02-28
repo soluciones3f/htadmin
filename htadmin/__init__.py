@@ -35,6 +35,7 @@ def change_credential():
 @requires_auth
 def api_users_list():
     users = g.ht.users()
+    users.sort()
     return Response( json.dumps(users), mimetype="application/json" )
 
 @app.route("/api/users/<username>", methods=["POST"])
