@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, flash, redirect, g, make_response, json, jsonify
 from passlib.apache import HtpasswdFile
+from auth import requires_auth
 import xkcd_password
 
 app = Flask(__name__)
@@ -31,6 +32,7 @@ def change_credential():
     return render_template("credentials.html")
 
 @app.route("/api/users", methods=["GET"])
+@requires_auth
 def api_users_list():
     users = g.ht.users()
     response = make_response(json.dumps(users))
@@ -38,6 +40,7 @@ def api_users_list():
     return response
 
 @app.route("/api/users/<username>", methods=["POST"])
+@requires_auth
 def api_user_post(username):
     """Add user with random password only if user does not exists."""
     exists = g.ht.get_hash(username) == None
@@ -50,6 +53,7 @@ def api_user_post(username):
     return jsonify({'error': 'username already exists'}), 409
 
 @app.route("/api/users/<username>", methods=["DELETE"])
+@requires_auth
 def api_user_delete(username):
     """Delete a user"""
     deleted = g.ht.delete(username)
