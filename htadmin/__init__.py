@@ -49,6 +49,16 @@ def api_user_post(username):
 
     return jsonify({'error': 'username already exists'}), 409
 
+@app.route("/api/users/<username>", methods=["DELETE"])
+def api_user_delete(username):
+    """Delete a user"""
+    deleted = g.ht.delete(username)
+    if deleted:
+        g.ht.save()
+        return jsonify({'username': username}), 200
+
+    return jsonify({'error': "username does not exist"}), 404
+
 @app.before_request
 def before_request():
     g.ht = HtpasswdFile("devel_users.passwd")
