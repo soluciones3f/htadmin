@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Users Administration</title>
+		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/dist/css/bootstrap.min.css')}}" />
+		<script type="text/javascript" src="{{ url_for("static", filename="jquery/dist/jquery.min.js") }}"></script>
+		<script type="text/javascript" src="{{ url_for("static", filename="knockout.js/knockout.js") }}"></script>
+	</head>
+	<body class="container" style="width: 500px">
+		<header class="page-header">
+			<h1>User Administration</h1>
+		</header>
+
+		<table class="table table-compress">
+			<thead>
+				<tr><th>Username</th></tr>
+			</thead>
+			<tbody data-bind="visible: users().length > 0, foreach: users">
+				<tr><td data-bind="text: $data"><!-- Username --></td></tr>
+			</tbody>
+			<tbody data-bind="visible: users().length  0, foreach: users">
+				<tr><td>No users yet!</td></tr>
+			</tbody>
+		</table>
+
+		<button class="btn btn-primary">Create new user</button>
+
+		<script type="text/javascript">
+			var vm = (function( ) {
+				this.users = ko.observableArray();
+
+				this.loadUsers = function() {
+					$.get("{{ url_for('api_users_list') }}").done( this.users );
+				};
+
+				this.loadUsers();
+			})();
+			ko.applyBindings(vm);
+		</script>
+	</body>
+</html>

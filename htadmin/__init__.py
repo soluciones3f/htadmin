@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, flash, redirect, g, make_response, json, jsonify
+from flask import Flask, render_template, url_for, request, flash, redirect, g, Response, json, jsonify
 from passlib.apache import HtpasswdFile
 from auth import requires_auth
 import xkcd_password
@@ -21,7 +21,7 @@ def change_credential():
         flash("The new password can not be empty", 'warning')
         return render_template('credentials.html')
 
-    if g.ht.check_password(username, oldpassword):
+    if g.ht.    sword(username, oldpassword):
         g.ht.set_password(username, newpassword)
         g.ht.save()
 
@@ -35,9 +35,7 @@ def change_credential():
 @requires_auth
 def api_users_list():
     users = g.ht.users()
-    response = make_response(json.dumps(users))
-    response.headers['mimetype'] = 'application/json'
-    return response
+    return Response( json.dumps(users), mimetype="application/json" )
 
 @app.route("/api/users/<username>", methods=["POST"])
 @requires_auth
@@ -62,6 +60,12 @@ def api_user_delete(username):
         return jsonify({'username': username}), 200
 
     return jsonify({'error': "username does not exist"}), 404
+
+@app.route("/api", methods=["GET"])
+@requires_auth
+def admin_template():
+    """Retrieve HTML for static admin site"""
+    return render_template("admin.html")
 
 @app.before_request
 def before_request():
