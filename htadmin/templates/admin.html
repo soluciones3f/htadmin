@@ -26,11 +26,28 @@
 			</tbody>
 		</table>
 
-		<button class="btn btn-primary">Create new user</button>
+		<fieldset>
+			<legend>Create new user</legend>
+
+			<div data-bind="if: lastMessage">
+				<div class="alert alert-info">
+					User <strong data-bind="text: lastMessage()	.username">username</strong> created with password <strong data-bind="text: lastMessage().password">password</strong>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input data-bind="value: newUsername" class="form-control" placeholder="Username" />
+			</div>
+			<div class="form-group">
+				<button data-bind="click: create" class="btn btn-primary">Create new user</button>
+			</div>
+		</fieldset>
 
 		<script type="text/javascript">
 			var ViewModel = function() {
 				this.users = ko.observableArray();
+				this.newUsername = ko.observable();
+				this.lastMessage = ko.observable();
 
 				this.loadUsers = function() {
 					$.get("{{ url_for('api_users_list') }}").done( this.users );
@@ -42,6 +59,24 @@
 					$.ajax(url, { type: "DELETE" }).done( function() {
 						self.users.remove(item)
 					});
+				}).bind(this);
+
+				this.create = (function() {
+					if(!this.newUsername()) return;
+
+					var self = this;
+					var url = "{{ url_for('api_users_list') }}/" + this.newUsername();
+					$.ajax(url, { type: "POST" }).done( function(data) {
+						self.lastMessage({
+							type: "info",
+							username: data.username,
+							password: data.password
+						});
+
+						self.newUsername("");
+						self.users.push(data.username)
+					});
+
 				}).bind(this);
 
 				this.loadUsers();
