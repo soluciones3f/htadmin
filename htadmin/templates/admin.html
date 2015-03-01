@@ -31,7 +31,7 @@
 
 			<div data-bind="if: lastMessage">
 				<div class="alert alert-info">
-					User <strong data-bind="text: lastMessage()	.username">username</strong> created with password <strong data-bind="text: lastMessage().password">password</strong>
+					User <strong data-bind="text: lastMessage().username"><!-- username --></strong> created with password <strong data-bind="text: lastMessage().password" id="generated-password"><!-- password --></strong>
 				</div>
 			</div>
 
@@ -72,6 +72,8 @@
 							username: data.username,
 							password: data.password
 						});
+
+						getSelection().selectAllChildren($("#generated-password")[0])
 
 						self.newUsername("");
 						self.users.push(data.username)
